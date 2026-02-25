@@ -1,0 +1,48 @@
+<div class="container mt-5">
+  <form #registerForm="ngForm" (ngSubmit)="register(registerForm)">
+    <div class="mb-3">
+<input
+        ngModel
+        type="text"
+        class="form-control"
+        id="firstName"
+        name="firstName"
+        placeholder="Enter First Name"
+      />
+      <input
+        ngModel
+        type="text"
+        class="form-control"
+        id="lastName"
+        name="lastName"
+        placeholder="Enter Last Name"
+      />
+      <input
+        ngModel
+        type="email"
+        class="form-control"
+        id="email"
+        name="email"
+        placeholder="Enter Email"
+        aria-describedby="emailHelp"
+      />
+    </div>
+    <div class="mb-3">
+      <input
+        ngModel
+        type="password"
+        class="form-control"
+        id="password"
+        name="password"
+        placeholder="Enter Password"
+      />
+    </div>
+    <div class="mb-3">
+      <input
+        type="submit"
+        class="form-control btn btn-outline-primary"
+        value="Register"
+      />
+    </div>
+  </form>
+</div>

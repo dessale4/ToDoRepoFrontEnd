@@ -1,0 +1,32 @@
+<div class="container mt-5">
+  <form #loginForm="ngForm" (ngSubmit)="login(loginForm)">
+    <div class="mb-3">
+      <input
+        ngModel
+        type="email"
+        class="form-control"
+        id="email"
+        name="email"
+        placeholder="Enter Email"
+        aria-describedby="emailHelp"
+      />
+    </div>
+    <div class="mb-3">
+      <input
+        ngModel
+        type="password"
+        class="form-control"
+        id="password"
+        name="password"
+        placeholder="Enter Password"
+      />
+    </div>
+    <div class="mb-3">
+      <input
+        type="submit"
+        class="form-control btn btn-outline-primary"
+        value="Login"
+      />
+    </div>
+  </form>
+</div>
