@@ -34,16 +34,14 @@ export class UserComponent {
     this.isAddingSubTask = !this.isAddingSubTask;
     this.isAddingTask = false;
   }
-
   selectTask(task: Task) {
     this.selectedTask = task;
   }
-
   addNewTask(taskFormData: NgForm) {
     if (!taskFormData.valid || this.isSavingTask) return;
 
     this.isSavingTask = true;
-
+    this.userTasks = [];
     this.userService.addNewTask(taskFormData.value).subscribe({
       next: (response: Task[]) => {
         this.userTasks = response;
@@ -53,7 +51,7 @@ export class UserComponent {
             (t) => t.id === this.selectedTask!.id,
           );
           this.selectedTask = updated ?? null;
-        } else if (this.userTasks.length) {
+        } else if (this.userTasks.length > 0) {
           this.selectedTask = this.userTasks[0];
         } else {
           response[0];
@@ -66,19 +64,19 @@ export class UserComponent {
       complete: () => (this.isSavingTask = false),
     });
   }
-
   getTasks(selectTaskId: number) {
     this.userService.getTasks().subscribe({
       next: (response: Task[]) => {
         this.userTasks = response;
-
         // auto-select first task for better UX
-        if (!this.selectedTask && this.userTasks.length >0) {
+        if (!this.selectedTask && this.userTasks.length > 0) {
           this.selectedTask = this.userTasks[0];
-        } else if (selectTaskId && this.userTasks.length) {
+        } else if (selectTaskId && this.userTasks.length > 0) {
           this.selectedTask = this.userTasks.filter(
             (t) => t.id == selectTaskId,
           )[0];
+        } else {
+          this.selectedTask = response[0];
         }
       },
       error: (err) => console.log('Api access failed ==> ', err),
@@ -91,7 +89,6 @@ export class UserComponent {
   deleteTask(task: Task) {
     this.userService.deleteTask(task).subscribe(
       (response) => {
-        console.log(response);
         this.getTasks(0);
       },
       (error) => {
@@ -101,9 +98,9 @@ export class UserComponent {
   }
   deleteSubTask(subTask: SubTask) {
     this.selectedTask = null;
+    this.userTasks = [];
     this.userService.deleteSubTask(subTask).subscribe(
       (response) => {
-        console.log(response);
         this.getTasks(0);
       },
       (error) => {

@@ -128,6 +128,7 @@
                     type="button"
                     class="btn btn-sm btn-outline-danger"
                     (click)="deleteTask(task); $event.stopPropagation()"
+                    [disabled]="task.id !== selectedTask!.id"
                   >
                     Delete
                   </button>
