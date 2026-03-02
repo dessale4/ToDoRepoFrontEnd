@@ -21,6 +21,8 @@ export class LoginComponent {
   ngOnInit(): void {}
   login(formData: NgForm) {
     this.userService.login(formData.value).subscribe(
+    // const devCredentials = {email:"test1@email.com", password:"password"};
+    // this.userService.login(devCredentials).subscribe(
       (response: LoggedUser) => {
         this.userAuthService.handleAccess(response);
       },

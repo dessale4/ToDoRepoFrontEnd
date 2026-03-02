@@ -21,7 +21,8 @@ export class RegisterComponent {
     this.userService.register(formData.value).subscribe(
       (response) => {
         alert(
-          'Thank you. You registered successfully!!. Now you can login to your account.',
+          `Thank you. You registered successfully!!.
+          Now you can login to your account.`,
         );
         this.router.navigate(['/login']);
       },

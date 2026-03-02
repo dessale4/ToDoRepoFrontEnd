@@ -1,12 +1,13 @@
 <div class="container mt-5">
   <form #registerForm="ngForm" (ngSubmit)="register(registerForm)">
     <div class="mb-3">
-<input
+      <input
         ngModel
         type="text"
         class="form-control"
         id="firstName"
         name="firstName"
+        required="true"
         placeholder="Enter First Name"
       />
       <input
@@ -15,6 +16,7 @@
         class="form-control"
         id="lastName"
         name="lastName"
+        required="true"
         placeholder="Enter Last Name"
       />
       <input
@@ -24,7 +26,7 @@
         id="email"
         name="email"
         placeholder="Enter Email"
-        aria-describedby="emailHelp"
+        required="true"
       />
     </div>
     <div class="mb-3">
@@ -35,10 +37,12 @@
         id="password"
         name="password"
         placeholder="Enter Password"
+        required="true"
       />
     </div>
     <div class="mb-3">
       <input
+        [disabled]="!registerForm.form.valid"
         type="submit"
         class="form-control btn btn-outline-primary"
         value="Register"
