@@ -1,0 +1,80 @@
+<div class="card shadow-sm">
+  <div class="card-header d-flex justify-content-between align-items-center">
+    <span>Tasks</span>
+
+    <button class="btn btn-info" (click)="toggleAdd()">
+      {{ isAdding ? "Cancel" : "Add New Task" }}
+    </button>
+
+    <span class="badge text-bg-secondary">{{ tasks.length }}</span>
+  </div>
+
+  <div class="card-body">
+    <!-- Add -->
+    <app-task-edit
+      *ngIf="isAdding"
+      mode="create"
+      [isSaving]="isSaving"
+      (submitForm)="onSubmitNewTask($event)"
+      (cancel)="toggleAdd()"
+    ></app-task-edit>
+
+    <!-- Edit -->
+    <app-task-edit
+      *ngIf="editingTask"
+      mode="edit"
+      [task]="editingTask"
+      [isSaving]="isSaving"
+      (submitForm)="onSubmitEdit($event)"
+      (cancel)="cancelEdit()"
+    ></app-task-edit>
+
+    <!-- List -->
+    <div class="list-group">
+      <button
+        type="button"
+        class="list-group-item list-group-item-action d-flex justify-content-between align-items-start"
+        *ngFor="let task of tasks; trackBy: trackTaskById"
+        (click)="selectTask.emit(task)"
+        [class.active]="selectedTask?.id === task.id"
+      >
+        <div class="me-2">
+          <div class="fw-semibold">{{ task.name }}</div>
+          <div class="small opacity-75">{{ task.category }}</div>
+          <div class="small opacity-75">{{ task.fromTime }} → {{ task.toTime }}</div>
+        </div>
+
+        <div class="text-end">
+          <span class="badge text-bg-light border">
+            {{ task?.subTasks?.length || 0 }} subtasks
+          </span>
+
+          <div class="mt-2 d-flex gap-2 justify-content-end">
+            <button
+              type="button"
+              class="btn btn-sm btn-outline-warning"
+              (click)="startEdit(task); $event.stopPropagation()"
+              [disabled]="!selectedTask || task.id !== selectedTask.id"
+              title="Edit"
+            >
+              Edit
+            </button>
+
+            <button
+              type="button"
+              class="btn btn-sm btn-outline-danger"
+              (click)="deleteTask.emit(task); $event.stopPropagation()"
+              [disabled]="!selectedTask || task.id !== selectedTask.id"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      </button>
+    </div>
+
+    <div *ngIf="!tasks.length" class="text-muted mt-3">
+      No tasks yet. Click “Add New Task” to add a task.
+    </div>
+  </div>
+</div>
