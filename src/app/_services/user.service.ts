@@ -33,6 +33,17 @@ export class UserService {
   public addNewTask(taskData: any): Observable<any> {
     return this.httpClient.post(this.API_PATH + '/toDoes/task', taskData);
   }
+  updateTask(taskId: number, updatedTaskData: Task) {
+    const params = new HttpParams().set('taskId', String(taskId));
+    return this.httpClient.put(
+      this.API_PATH + '/toDoes/editTask',
+      updatedTaskData,
+      {
+        params,
+        responseType: 'text' as const,
+      },
+    );
+  }
   public deleteTask(taskData: Task): Observable<string> {
     const params = new HttpParams().set('taskId', String(taskData.id));
     return this.httpClient.delete(this.API_PATH + '/toDoes/deleteTask', {
@@ -40,13 +51,7 @@ export class UserService {
       responseType: 'text' as const,
     });
   }
-  public deleteSubTask(subTaskData: SubTask): Observable<string> {
-    const params = new HttpParams().set('subTaskId', String(subTaskData.id));
-    return this.httpClient.delete(this.API_PATH + '/subTask/deleteSubTask', {
-      params,
-      responseType: 'text' as const,
-    });
-  }
+
   public getTasks(): Observable<any> {
     return this.httpClient.get(this.API_PATH + '/toDoes/tasks');
   }
@@ -55,5 +60,34 @@ export class UserService {
       this.API_PATH + '/subTask/addNewSubTask',
       subTaskData,
     );
+  }
+  updateSubTask(subTaskId: number, updatedSubTaskData: SubTask) {
+    const params = new HttpParams().set('subTaskId', String(subTaskId));
+    return this.httpClient.put(
+      this.API_PATH + '/subTask/editSubTask',
+      updatedSubTaskData,
+      {
+        params,
+        responseType: 'text' as const,
+      },
+    );
+  }
+  toggleSubTaskCompletion(subTaskStatus:boolean, subTaskId:number, taskId:number) {
+    const params = new HttpParams().set('subTaskId', String(subTaskId)).set('taskId', String(taskId)).set('subTaskStatus', subTaskStatus);
+    return this.httpClient.post(
+      this.API_PATH + '/subTask/toggleSubTaskCompletion',
+      {},
+      {
+        params,
+        responseType: 'text' as const,
+      },
+    );
+  }
+  public deleteSubTask(subTaskData: SubTask): Observable<string> {
+    const params = new HttpParams().set('subTaskId', String(subTaskData.id));
+    return this.httpClient.delete(this.API_PATH + '/subTask/deleteSubTask', {
+      params,
+      responseType: 'text' as const,
+    });
   }
 }

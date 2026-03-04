@@ -54,7 +54,7 @@
               type="button"
               class="btn btn-sm btn-outline-warning"
               (click)="startEdit(task); $event.stopPropagation()"
-              [disabled]="!selectedTask || task.id !== selectedTask.id"
+              [disabled]="!selectedTask || task.id !== selectedTask.id || selectedTask.done"
               title="Edit"
             >
               Edit

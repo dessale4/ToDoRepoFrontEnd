@@ -31,15 +31,4 @@ export class LoginComponent {
       },
     );
   }
-  // private handleAccess(userData: LoggedUser) {
-  //   const roles: Role[] = userData.loggedUser.roles;
-  //   this.userAuthService.saveInToLocalStorage('jwtToken', userData.jwtToken);
-  //   this.userAuthService.saveInToLocalStorage('roles', JSON.stringify(roles));
-  //   const userRoles: string[] = roles.map((r) => r.name);
-  //   if (userRoles.includes('Admin')) {
-  //     this.router.navigate(['/admin']);
-  //   } else {
-  //     this.router.navigate(['/user']);
-  //   }
-  // }
 }

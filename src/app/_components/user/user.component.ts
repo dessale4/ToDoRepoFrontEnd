@@ -40,14 +40,16 @@ export class UserComponent {
 
         if (selectTaskId) {
           this.selectedTask =
-            this.userTasks.find((t) => t.id === selectTaskId) ?? this.userTasks[0];
+            this.userTasks.find((t) => t.id === selectTaskId) ??
+            this.userTasks[0];
           return;
         }
 
         // keep selection stable
         if (this.selectedTask) {
           this.selectedTask =
-            this.userTasks.find((t) => t.id === this.selectedTask!.id) ?? this.userTasks[0];
+            this.userTasks.find((t) => t.id === this.selectedTask!.id) ??
+            this.userTasks[0];
         } else {
           this.selectedTask = this.userTasks[0];
         }
@@ -72,7 +74,8 @@ export class UserComponent {
           // reselect
           if (this.selectedTask) {
             this.selectedTask =
-              this.userTasks.find((t) => t.id === this.selectedTask!.id) ?? this.userTasks[0];
+              this.userTasks.find((t) => t.id === this.selectedTask!.id) ??
+              this.userTasks[0];
           } else {
             this.selectedTask = this.userTasks[0];
           }
@@ -93,9 +96,12 @@ export class UserComponent {
   }
 
   // Placeholder: wire to your API when ready
-  onSaveTaskEdit(_update: { taskId: number; changes: any }) {
-    // this.userService.updateTask(update.taskId, update.changes)...
-    console.log('Task edit payload:', _update);
+  onSaveTaskEdit(update: { taskId: number; changes: any }) {
+    this.userService.updateTask(update.taskId, update.changes).subscribe({
+      next: () => this.getTasks(update.taskId),
+      error: (error) => console.log('Task edition failed ', error),
+    });
+    // console.log('Task edit payload:', update);
   }
 
   // ===== Events from SubTaskComponent =====
@@ -103,11 +109,13 @@ export class UserComponent {
     if (this.isSavingSubTask) return;
 
     this.isSavingSubTask = true;
-    this.userService.addNewSubtask({ ...payload.data, taskId: payload.taskId }).subscribe({
-      next: (updatedTask: Task) => this.getTasks(updatedTask.id),
-      error: (error) => console.log('Error', error),
-      complete: () => (this.isSavingSubTask = false),
-    });
+    this.userService
+      .addNewSubtask({ ...payload.data, taskId: payload.taskId })
+      .subscribe({
+        next: (updatedTask: Task) => this.getTasks(updatedTask.id),
+        error: (error) => console.log('Error', error),
+        complete: () => (this.isSavingSubTask = false),
+      });
   }
 
   onDeleteSubTask(subTask: SubTask) {
@@ -118,14 +126,24 @@ export class UserComponent {
   }
 
   // Placeholder: wire to your API when ready
-  onSaveSubTaskEdit(_update: { subTaskId: number; changes: any }) {
-    // this.userService.updateSubTask(update.subTaskId, update.changes)...
-    console.log('Subtask edit payload:', _update);
+  onSaveSubTaskEdit(update: { subTaskId: number; changes: any }) {
+    if (!this.selectedTask) return;
+    let taskId = this.selectedTask?.id || 0;
+    const updatedSubTask = { ...update.changes, taskId };
+    this.userService.updateSubTask(update.subTaskId, updatedSubTask).subscribe({
+      next: () => this.getTasks(taskId),
+      error: (error) => console.log('Task edition failed ', error),
+    });
   }
 
   // Placeholder: wire to your API when ready
-  onToggleSubTaskDone(_payload: { subTask: SubTask; done: boolean }) {
-    // this.userService.markSubTaskDone(payload.subTask.id, payload.done)...
-    console.log('Toggle done:', _payload);
+  onToggleSubTaskDone(payload: { subTask: SubTask; done: boolean }) {
+    if (!this.selectedTask) return;
+    let taskId = this.selectedTask?.id || 0;
+    // const subTaskStatus = { ...payload.subTask, done: payload.done, taskId };
+    this.userService.toggleSubTaskCompletion(payload.done, payload.subTask.id, taskId).subscribe({
+      next: () => this.getTasks(taskId),
+      error: (error) => console.log('Task status change failed ', error),
+    });
   }
 }
